@@ -100,7 +100,7 @@ static CV_PossibleValue_t cons_1upsound_t[] = {
 	{1, "Sound"},
 	{0, NULL}
 };
-consvar_t cv_1upsound = CVAR_INIT ("1upsound", "Jingle", CV_SAVE, cons_1upsound_t, NULL);
+consvar_t cv_1upsound = CVAR_INIT ("1upsound", "Jingle", CV_HIDEN, cons_1upsound_t, NULL);
 
 // Sound system toggles, saved into the config
 consvar_t cv_gamedigimusic = CVAR_INIT ("digimusic", "On", CV_SAVE|CV_CALL|CV_NOINIT, CV_OnOff, GameDigiMusic_OnChange);
@@ -378,8 +378,10 @@ void S_StopSounds(void)
 
 	// kill all playing sounds at start of level
 	for (cnum = 0; cnum < numofchannels; cnum++)
-		if (channels[cnum].sfxinfo)
+		if (channels[cnum].sfxinfo && strcmp(channels[cnum].sfxinfo->name,"cdfm73"))
+		{
 			S_StopChannel(cnum);
+		}
 
 	S_ResetCaptions();
 }
@@ -1034,8 +1036,10 @@ void S_SetSfxVolume(INT32 volume)
 void S_ClearSfx(void)
 {
 	size_t i;
-	for (i = 1; i < NUMSFX; i++)
-		I_FreeSfx(S_sfx + i);
+	for (i = 1; i < NUMSFX; i++) {
+		if (i != sfx_cdfm73)
+			I_FreeSfx(S_sfx + i);
+	}
 }
 
 static void S_StopChannel(INT32 cnum)
@@ -2227,8 +2231,7 @@ static boolean S_CheckQueue(void)
 
 static void S_ClearQueue(void)
 {
-	queue_name[0] = queue_flags = queue_position = queue_fadeinms = 0;
-	queue_looping = false;
+	queue_name[0] = queue_flags = queue_looping = queue_position = queue_fadeinms = 0;
 }
 
 static void S_ChangeMusicToQueue(void)

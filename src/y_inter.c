@@ -47,7 +47,7 @@
 typedef struct
 {
 	char patch[9];
-	 INT32 points;
+	 INT32 points, minutes, seconds, msec;
 	UINT8 display;
 } y_bonus_t;
 
@@ -184,7 +184,9 @@ static void Y_UnloadData(void);
 
 static void Y_IntermissionTokenDrawer(void)
 {
-	INT32 y, offs, lowy, calc;
+	return;
+
+	/*INT32 y, offs, lowy, calc;
 	UINT32 tokencount;
 	INT16 temp;
 	UINT8 em;
@@ -220,7 +222,7 @@ static void Y_IntermissionTokenDrawer(void)
 	calc = (lowy - y)*2;
 
 	if (calc > 0)
-		V_DrawCroppedPatch(32<<FRACBITS, y<<FRACBITS, FRACUNIT/2, FRACUNIT/2, 0, tokenicon, NULL, 0, 0, tokenicon->width<<FRACBITS, calc<<FRACBITS);
+		V_DrawCroppedPatch(32<<FRACBITS, y<<FRACBITS, FRACUNIT/2, FRACUNIT/2, 0, tokenicon, NULL, 0, 0, tokenicon->width<<FRACBITS, calc<<FRACBITS);*/
 }
 
 
@@ -451,39 +453,6 @@ void Y_IntermissionDrawer(void)
 	{
 		INT32 bonusy;
 
-		if (gottoken) // first to be behind everything else
-			Y_IntermissionTokenDrawer();
-
-		if (!splitscreen)  // there's not enough room in splitscreen, don't even bother trying!
-		{
-			// draw score
-			ST_DrawPatchFromHud(HUD_SCORE, sboscore);
-			ST_DrawNumFromHud(HUD_SCORENUM, data.coop.score);
-
-			// draw time
-			ST_DrawPatchFromHud(HUD_TIME, sbotime);
-			if (cv_timetic.value == 3)
-				ST_DrawNumFromHud(HUD_SECONDS, data.coop.tics);
-			else
-			{
-				INT32 seconds, minutes, tictrn;
-
-				seconds = G_TicsToSeconds(data.coop.tics);
-				minutes = G_TicsToMinutes(data.coop.tics, true);
-				tictrn  = G_TicsToCentiseconds(data.coop.tics);
-
-				ST_DrawNumFromHud(HUD_MINUTES, minutes); // Minutes
-				ST_DrawPatchFromHud(HUD_TIMECOLON, sbocolon); // Colon
-				ST_DrawPadNumFromHud(HUD_SECONDS, seconds, 2); // Seconds
-
-				if (cv_timetic.value == 1 || cv_timetic.value == 2 || modeattacking || marathonmode)
-				{
-					ST_DrawPatchFromHud(HUD_TIMETICCOLON, sboperiod); // Period
-					ST_DrawPadNumFromHud(HUD_TICS, tictrn, 2); // Tics
-				}
-			}
-		}
-
 		if (LUA_HudEnabled(hud_intermissiontitletext))
 		{
 			// draw the "got through act" lines and act number
@@ -497,10 +466,10 @@ void Y_IntermissionDrawer(void)
 			}
 		}
 
-		bonusy = 150;
+		bonusy = 184;
 		// Total
-		V_DrawScaledPatch(152, bonusy, 0, data.coop.ptotal);
-		V_DrawTallNum(BASEVIDWIDTH - 68, bonusy + 1, 0, data.coop.total);
+		/*V_DrawScaledPatch(152, bonusy, 0, data.coop.ptotal);
+		V_DrawTallNum(BASEVIDWIDTH - 68, bonusy + 1, 0, data.coop.total);*/
 		bonusy -= (3*(tallnum[0]->height)/2) + 1;
 
 		// Draw bonuses
@@ -509,7 +478,17 @@ void Y_IntermissionDrawer(void)
 			if (data.coop.bonuses[i].display)
 			{
 				V_DrawScaledPatch(152, bonusy, 0, data.coop.bonuspatches[i]);
-				V_DrawTallNum(BASEVIDWIDTH - 68, bonusy + 1, 0, data.coop.bonuses[i].points);
+				
+				if (data.coop.bonuses[i].seconds != -1)
+				{
+					V_DrawTallNum(BASEVIDWIDTH - 92, bonusy + 1, 0, data.coop.bonuses[i].minutes);
+					V_DrawScaledPatch(BASEVIDWIDTH - 92, bonusy + 1, 0, W_CachePatchName("STTCOLON", PU_PATCH));
+					V_DrawPaddedTallNum(BASEVIDWIDTH - 68, bonusy + 1, 0, data.coop.bonuses[i].seconds,2);
+				}
+				else
+				{
+					V_DrawTallNum(BASEVIDWIDTH - 68, bonusy + 1, 0, data.coop.bonuses[i].points);
+				}
 			}
 			bonusy -= (3*(tallnum[0]->height)/2) + 1;
 		}
@@ -1065,7 +1044,7 @@ void Y_Ticker(void)
 				skip = true;
 
 		// bonuses count down by 222 each tic
-		for (i = 0; i < 4; ++i)
+		/*for (i = 0; i < 4; ++i)
 		{
 			if (!data.coop.bonuses[i].points)
 				continue;
@@ -1083,27 +1062,22 @@ void Y_Ticker(void)
 				data.coop.score = MAXSCORE;
 			if (data.coop.bonuses[i].points > 0)
 				anybonuses = true;
-		}
+		}*/
+		
+		tallydonetic = intertic;
+		endtic = intertic + 5*TICRATE; // 3 second pause after end of tally
+		//S_StartSound(NULL, sfx_chchng); // cha-ching!
 
-		if (!anybonuses)
+		// Update when done with tally
+		if (!demoplayback)
 		{
-			tallydonetic = intertic;
-			endtic = intertic + 3*TICRATE; // 3 second pause after end of tally
-			S_StartSound(NULL, (gottoken ? sfx_token : sfx_chchng)); // cha-ching!
+			M_SilentUpdateUnlockablesAndEmblems(serverGamedata);
 
-			// Update when done with tally
-			if (!demoplayback)
-			{
-				M_SilentUpdateUnlockablesAndEmblems(serverGamedata);
+			if (M_UpdateUnlockablesAndExtraEmblems(clientGamedata))
+				S_StartSound(NULL, sfx_s3k68);
 
-				if (M_UpdateUnlockablesAndExtraEmblems(clientGamedata))
-					S_StartSound(NULL, sfx_s3k68);
-
-				G_SaveGameData(clientGamedata);
-			}
+			G_SaveGameData(clientGamedata);
 		}
-		else if (!(intertic & 1))
-			S_StartSound(NULL, sfx_ptally); // tally sound effect
 
 		if (data.coop.gotlife > 0 && (skip == true || data.coop.score % 50000 < oldscore % 50000)) // just passed a 50000 point mark
 		{
@@ -1155,7 +1129,7 @@ void Y_Ticker(void)
 					data.spec.emeraldy += (++data.spec.emeraldmomy);
 					if (data.spec.emeraldy > 74)
 					{
-						S_StartSound(NULL, sfx_tink); // tink
+						//S_StartSound(NULL, sfx_tink); // tink
 						data.spec.emeraldbounces++;
 						data.spec.emeraldmomy = -(data.spec.emeraldmomy/2);
 						data.spec.emeraldy = 74;
@@ -1170,7 +1144,7 @@ void Y_Ticker(void)
 				}
 				if (data.spec.emeraldbounces < 1 && data.spec.emeraldy > 74)
 				{
-					S_StartSound(NULL, sfx_shldls); // nope
+					//S_StartSound(NULL, sfx_shldls); // nope
 					data.spec.emeraldbounces++;
 					data.spec.emeraldmomy = -(data.spec.emeraldmomy/2);
 					data.spec.emeraldy = 74;
@@ -1195,8 +1169,8 @@ void Y_Ticker(void)
 			if ((intertic - tallydonetic) > (3*TICRATE)/2)
 			{
 				endtic = intertic + 4*TICRATE; // 4 second pause after end of tally
-				if (data.spec.continues & 0x80)
-					S_StartSound(NULL, sfx_s3kac); // bingly-bingly-bing!
+				/*if (data.spec.continues & 0x80)
+					S_StartSound(NULL, sfx_s3kac); // bingly-bingly-bing!*/
 
 			}
 			return;
@@ -1227,7 +1201,7 @@ void Y_Ticker(void)
 			if (!((data.spec.continues & 0x80) || (super && ALL7EMERALDS(emeralds)))) // don't set endtic yet!
 				endtic = intertic + 4*TICRATE; // 4 second pause after end of tally
 
-			S_StartSound(NULL, (gottoken ? sfx_token : sfx_chchng)); // cha-ching!
+			//S_StartSound(NULL, (gottoken ? sfx_token : sfx_chchng)); // cha-ching!
 
 			// Update when done with tally
 			if (!demoplayback)
@@ -1240,8 +1214,6 @@ void Y_Ticker(void)
 				G_SaveGameData(clientGamedata);
 			}
 		}
-		else if (!(intertic & 1))
-			S_StartSound(NULL, sfx_ptally); // tally sound effect
 
 		if (data.spec.gotlife > 0 && (skip == true || data.spec.score % 50000 < oldscore % 50000)) // just passed a 50000 point mark
 		{
@@ -1855,31 +1827,13 @@ static void Y_SetTimeBonus(player_t *player, y_bonus_t *bstruct)
 	strncpy(bstruct->patch, "YB_TIME", sizeof(bstruct->patch));
 	bstruct->display = true;
 
-	if (stagefailed == true)
-	{
-		// Time Bonus would be very easy to cheese by failing immediately.
-		bonus = 0;
-	}
-	else
-	{
-		// calculate time bonus
-		secs = player->realtime / TICRATE;
-		if      (secs <  30) /*   :30 */ bonus = 50000;
-		else if (secs <  60) /*  1:00 */ bonus = 10000;
-		else if (secs <  90) /*  1:30 */ bonus = 5000;
-		else if (secs < 120) /*  2:00 */ bonus = 4000;
-		else if (secs < 180) /*  3:00 */ bonus = 3000;
-		else if (secs < 240) /*  4:00 */ bonus = 2000;
-		else if (secs < 300) /*  5:00 */ bonus = 1000;
-		else if (secs < 360) /*  6:00 */ bonus = 500;
-		else if (secs < 420) /*  7:00 */ bonus = 400;
-		else if (secs < 480) /*  8:00 */ bonus = 300;
-		else if (secs < 540) /*  9:00 */ bonus = 200;
-		else if (secs < 600) /* 10:00 */ bonus = 100;
-		else  /* TIME TAKEN: TOO LONG */ bonus = 0;
-	}
+	bonus = player->realtime / TICRATE;
 
 	bstruct->points = bonus;
+
+	bstruct->minutes = bonus / 60;
+	bstruct->seconds = bonus % 60;
+	bstruct->msec = (player->realtime % TICRATE)*100/TICRATE;
 }
 
 //
@@ -1889,7 +1843,19 @@ static void Y_SetRingBonus(player_t *player, y_bonus_t *bstruct)
 {
 	strncpy(bstruct->patch, "YB_RING", sizeof(bstruct->patch));
 	bstruct->display = true;
-	bstruct->points = max(0, (player->rings) * 100);
+	bstruct->points = max(0, (player->rings));
+	bstruct->seconds = -1;
+}
+
+//
+// Y_SetKillsBonus
+//
+static void Y_SetKillsBonus(player_t* player, y_bonus_t* bstruct)
+{
+	strncpy(bstruct->patch, "YB_PERFECT", sizeof(bstruct->patch));
+	bstruct->display = true;
+	bstruct->points = max(0, (player->totalkills));
+	bstruct->seconds = -1;
 }
 
 //
@@ -1900,6 +1866,7 @@ static void Y_SetNightsBonus(player_t *player, y_bonus_t *bstruct)
 	strncpy(bstruct->patch, "YB_NIGHT", sizeof(bstruct->patch));
 	bstruct->display = true;
 	bstruct->points = player->totalmarescore;
+	bstruct->seconds = -1;
 }
 
 //
@@ -1910,6 +1877,7 @@ static void Y_SetLapBonus(player_t *player, y_bonus_t *bstruct)
 	strncpy(bstruct->patch, "YB_LAP", sizeof(bstruct->patch));
 	bstruct->display = true;
 	bstruct->points = max(0, player->totalmarebonuslap * 1000);
+	bstruct->seconds = -1;
 }
 
 //
@@ -1920,6 +1888,7 @@ static void Y_SetLinkBonus(player_t *player, y_bonus_t *bstruct)
 	strncpy(bstruct->patch, "YB_LINK", sizeof(bstruct->patch));
 	bstruct->display = true;
 	bstruct->points = max(0, (player->maxlink - 1) * 100);
+	bstruct->seconds = -1;
 }
 
 //
@@ -1947,6 +1916,7 @@ static void Y_SetGuardBonus(player_t *player, y_bonus_t *bstruct)
 	}
 
 	bstruct->points = bonus;
+	bstruct->seconds = -1; //There is almost 100% a better way to do this than to set this in every function, but fuck if I know what that would be
 }
 
 //
@@ -1959,7 +1929,8 @@ static void Y_SetPerfectBonus(player_t *player, y_bonus_t *bstruct)
 	(void)player;
 	memset(bstruct, 0, sizeof(y_bonus_t));
 	strncpy(bstruct->patch, "YB_PERFE", sizeof(bstruct->patch));
-
+	bstruct->seconds = -1;
+	
 	if (intertype != int_coop || data.coop.gotperfbonus == -1)
 	{
 		INT32 sharedringtotal = 0;
@@ -1996,6 +1967,7 @@ static void Y_SetSpecialRingBonus(player_t *player, y_bonus_t *bstruct)
 		sharedringtotal += players[i].rings;
 	}
 	bstruct->points = max(0, (sharedringtotal) * 100);
+	bstruct->seconds = -1;
 }
 
 // This list can be extended in the future with SOC/Lua, perhaps.
@@ -2011,19 +1983,19 @@ bonus_f bonuses_list[6][4] = {
 		Y_SetNullBonus,
 		Y_SetTimeBonus,
 		Y_SetRingBonus,
-		Y_SetPerfectBonus,
+		Y_SetKillsBonus,
 	},
 	{
 		Y_SetNullBonus,
-		Y_SetGuardBonus,
+		Y_SetTimeBonus,
 		Y_SetRingBonus,
 		Y_SetNullBonus,
 	},
 	{
 		Y_SetNullBonus,
-		Y_SetGuardBonus,
+		Y_SetTimeBonus,
 		Y_SetRingBonus,
-		Y_SetPerfectBonus,
+		Y_SetKillsBonus,
 	},
 	{
 		Y_SetNullBonus,

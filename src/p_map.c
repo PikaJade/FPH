@@ -844,6 +844,7 @@ static unsigned PIT_DoCheckThing(mobj_t *thing)
 		return CHECKTHING_COLLIDE;
 	}
 
+/*
 	// vectorise metal - done in a special case as at this point neither has the right flags for touching
 	if (thing->type == MT_METALSONIC_BATTLE
 	&& (tmthing->flags & MF_MISSILE)
@@ -864,6 +865,7 @@ static unsigned PIT_DoCheckThing(mobj_t *thing)
 
 		return CHECKTHING_COLLIDE;
 	}
+*/
 
 	if ((thing->flags & MF_NOCLIPTHING) || !(thing->flags & (MF_SOLID|MF_SPECIAL|MF_PAIN|MF_SHOOTABLE|MF_SPRING)))
 		return CHECKTHING_IGNORE;
@@ -4310,7 +4312,7 @@ static boolean PIT_ChangeSector(mobj_t *thing, boolean realcrush, boolean crunch
 				{
 					crumble_t *crumbler;
 
-					if (think->function != (actionf_p1)T_StartCrumble)
+					if (think->function.acp1 != (actionf_p1)T_StartCrumble)
 						continue;
 
 					crumbler = (crumble_t *)think;

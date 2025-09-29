@@ -24,9 +24,9 @@
 /// Defaults
 #define SKINNAMESIZE 16
 // should be all lowercase!! S_SKIN processing does a strlwr
-#define DEFAULTSKIN "sonic"
-#define DEFAULTSKIN2 "tails" // secondary player
-#define DEFAULTNIGHTSSKIN 0
+#define DEFAULTSKIN "fang"
+#define DEFAULTSKIN2 "fang" // secondary player
+#define DEFAULTNIGHTSSKIN 4
 
 /// The skin_t struct
 typedef struct

@@ -2147,7 +2147,7 @@ static void ST_drawNiGHTSHUD(void)
 				aflag |= (9 - 9*drawtime/(TICRATE/2)) << V_ALPHASHIFT;
 			// This one, not quite as much so.
 			V_DrawCenteredString(BASEVIDWIDTH/2, 60, aflag,
-		                     va(M_GetText("\x80GET\x82 %d\x80 SPHERE%s!"), ssspheres,
+		                     va(M_GetText("\x80GET THAT EMERALD!"), ssspheres,
 		                        (ssspheres > 1) ? "S" : ""));
 		}
 	}
@@ -2758,6 +2758,19 @@ static void ST_overlayDrawer(void)
 	if (G_GametypeHasTeams())
 		ST_drawTeamHUD();
 
+	// Moved Lua HUDs before the powerups for entirely selfish purposes, mwahahahaha -J
+	// Maybe one day I'll make a dedicated hand HUD hook. Maybe.
+	if (!(netgame || multiplayer) || !hu_showscores)
+	{
+		INT32 hooklistindex = splitscreen && stplyr == &players[secondarydisplayplayer] ? 1 : 0;
+		if (renderisnewtic)
+		{
+			LUA_HUD_ClearDrawList(luahuddrawlist_game[hooklistindex]);
+			LUA_HUDHOOK(game, luahuddrawlist_game[hooklistindex]);
+		}
+		LUA_HUD_DrawList(luahuddrawlist_game[hooklistindex]);
+	}
+
 	if (!hu_showscores) // hide the following if TAB is held
 	{
 		// Countdown timer for Race Mode
@@ -2825,16 +2838,7 @@ static void ST_overlayDrawer(void)
 	else if (!(netgame || multiplayer) && cv_powerupdisplay.value == 2 && LUA_HudEnabled(hud_powerups))
 		ST_drawPowerupHUD(); // same as it ever was...
 
-	if (!(netgame || multiplayer) || !hu_showscores)
-	{
-		INT32 hooklistindex = splitscreen && stplyr == &players[secondarydisplayplayer] ? 1 : 0;
-		if (renderisnewtic)
-		{
-			LUA_HUD_ClearDrawList(luahuddrawlist_game[hooklistindex]);
-			LUA_HUDHOOK(game, luahuddrawlist_game[hooklistindex]);
-		}
-		LUA_HUD_DrawList(luahuddrawlist_game[hooklistindex]);
-	}
+	// For the record, the Lua HUD used to be here
 
 	// draw level title Tails
 	if (drawstagetitle && !WipeInAction && !WipeStageTitle)

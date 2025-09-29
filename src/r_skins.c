@@ -339,6 +339,16 @@ boolean R_SkinUsable(INT32 playernum, INT32 skinnum)
 		return true;
 	}
 
+	if (skinnum != 0
+		&& (skinnum < 4
+			|| skinnum == 5)
+		)
+	{
+		// Force 5. No vanilla characters.
+		// Except for Sonic. The game throws a fit if he's not here, so let SOC take care of that.
+		return false;
+	}
+
 	// We will now check if this skin is supposed to be locked or not.
 
 	for (i = 0; i < MAXUNLOCKABLES; i++)

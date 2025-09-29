@@ -328,8 +328,8 @@ consvar_t cv_invertmouse = CVAR_INIT ("invertmouse", "Off", CV_SAVE, CV_OnOff, N
 consvar_t cv_alwaysfreelook = CVAR_INIT ("alwaysmlook", "On", CV_SAVE, CV_OnOff, NULL);
 consvar_t cv_invertmouse2 = CVAR_INIT ("invertmouse2", "Off", CV_SAVE, CV_OnOff, NULL);
 consvar_t cv_alwaysfreelook2 = CVAR_INIT ("alwaysmlook2", "On", CV_SAVE, CV_OnOff, NULL);
-consvar_t cv_chasefreelook = CVAR_INIT ("chasemlook", "Off", CV_SAVE, CV_OnOff, NULL);
-consvar_t cv_chasefreelook2 = CVAR_INIT ("chasemlook2", "Off", CV_SAVE, CV_OnOff, NULL);
+consvar_t cv_chasefreelook = CVAR_INIT ("chasemlook", "On", CV_SAVE, CV_OnOff, NULL);
+consvar_t cv_chasefreelook2 = CVAR_INIT ("chasemlook2", "On", CV_SAVE, CV_OnOff, NULL);
 consvar_t cv_mousemove = CVAR_INIT ("mousemove", "Off", CV_SAVE, CV_OnOff, NULL);
 consvar_t cv_mousemove2 = CVAR_INIT ("mousemove2", "Off", CV_SAVE, CV_OnOff, NULL);
 
@@ -3788,7 +3788,8 @@ boolean G_GametypeHasSpectators(void)
 //
 boolean G_RingSlingerGametype(void)
 {
-	return ((gametyperules & GTR_RINGSLINGER) || (cv_ringslinger.value));
+	//return ((gametyperules & GTR_RINGSLINGER) || (cv_ringslinger.value));
+	return false;
 }
 
 //

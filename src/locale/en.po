@@ -2148,138 +2148,184 @@ msgid ""
 "(Press 'Y' to quit)"
 msgstr ""
 
-#: m_menu.c:8195
+#: m_menu.c:2173
 msgid ""
 "Eggman's tied explosives\n"
 "to your girlfriend, and\n"
 "will activate them if\n"
 "you press the 'Y' key!\n"
-"Press 'N' to save her!"
+"Press 'N' to save her!\n"
+"\n"
+"(Press 'Y' to quit)"
 msgstr ""
 
-#: m_menu.c:8196
+#: m_menu.c:2174
 msgid ""
-"What would Tails say if\n"
-"he saw you quitting the game?"
+"What would Trip say if\n"
+"she saw you quitting the game?\n"
+"\n"
+"(Press 'Y' to quit)"
 msgstr ""
 
-#: m_menu.c:8197
+#: m_menu.c:2175
 msgid ""
 "Hey!\n"
-"Where do ya think you're goin'?"
+"Where do ya think you're goin'?\n"
+"\n"
+"(Press 'Y' to quit)"
 msgstr ""
 
-#: m_menu.c:8198
+#: m_menu.c:2176
 msgid ""
 "Forget your studies!\n"
-"Play some more!"
+"Play some more!\n"
+"\n"
+"(Press 'Y' to quit)"
 msgstr ""
 
-#: m_menu.c:8199
+#: m_menu.c:2177
 msgid ""
 "You're trying to say you\n"
-"like Sonic 2K6 better than\n"
-"this, right?"
+"like Duke Nukem Forever better\n"
+"than this, right?\n"
+"\n"
+"(Press 'Y' to quit)"
 msgstr ""
 
-#: m_menu.c:8200
+#: m_menu.c:2178
 msgid ""
 "Don't leave yet -- there's a\n"
-"super emerald around that corner!"
+"super emerald around that corner!\n"
+"\n"
+"(Press 'Y' to quit)"
 msgstr ""
 
-#: m_menu.c:8201
-msgid "You'd rather work than play?"
+#: m_menu.c:2179
+msgid ""
+"You'd rather work than play?\n"
+"\n"
+"(Press 'Y' to quit)"
 msgstr ""
 
-#: m_menu.c:8202
+#: m_menu.c:2180
 msgid ""
 "Go ahead and leave. See if I care...\n"
-"*sniffle*"
+"*sniffle*\n"
+"\n"
+"(Press 'Y' to quit)"
 msgstr ""
 
-#: m_menu.c:8204
+#: m_menu.c:2182
 msgid ""
 "If you leave now,\n"
-"Eggman will take over the world!"
+"Eggman will take over the world!\n"
+"\n"
+"(Press 'Y' to quit)"
 msgstr ""
 
-#: m_menu.c:8205
+#: m_menu.c:2183
 msgid ""
 "Don't quit!\n"
-"There are animals\n"
-"to save!"
+"There's a ruby\n"
+"to nab!\n"
+"\n"
+"(Press 'Y' to quit)"
 msgstr ""
 
-#: m_menu.c:8206
+#: m_menu.c:2184
 msgid ""
 "Aw c'mon, just bop\n"
-"a few more robots!"
+"a few more robots!\n"
+"\n"
+"(Press 'Y' to quit)"
 msgstr ""
 
-#: m_menu.c:8207
-msgid "Did you get all those Chaos Emeralds?"
+#: m_menu.c:2185
+msgid ""
+"Did you get all those Chaos Emeralds?\n"
+"\n"
+"(Press 'Y' to quit)"
 msgstr ""
 
-#: m_menu.c:8208
+#: m_menu.c:2186
 msgid ""
 "If you leave, I'll use\n"
-"my spin attack on you!"
+"my spin attack on you!\n"
+"\n"
+"(Press 'Y' to quit)"
 msgstr ""
 
-#: m_menu.c:8209
+#: m_menu.c:2187
 msgid ""
 "Don't go!\n"
 "You might find the hidden\n"
-"levels!"
+"levels!\n"
+"\n"
+"(Press 'Y' to quit)"
 msgstr ""
 
-#: m_menu.c:8210
+#: m_menu.c:2188
 msgid ""
-"Hit the 'N' key, Sonic!\n"
-"The 'N' key!"
+"Hit the 'N' key, Fang!\n"
+"The 'N' key!\n"
+"\n"
+"(Press 'Y' to quit)"
 msgstr ""
 
-#: m_menu.c:8212
+#: m_menu.c:2190
 msgid ""
-"Are you really going to\n"
-"give up?\n"
-"We certainly would never give you up."
+"Are you really going to give up?\n"
+"We certainly would never give you up.\n"
+"\n"
+"(Press 'Y' to quit)"
 msgstr ""
 
-#: m_menu.c:8213
-msgid "Come on, just ONE more netgame!"
+#: m_menu.c:2191
+msgid ""
+"Come on, just ONE more netgame!\n"
+"\n"
+"(Press 'Y' to quit)"
 msgstr ""
 
-#: m_menu.c:8214
+#: m_menu.c:2192
 msgid ""
 "Press 'N' to unlock\n"
-"the Ultimate Cheat!"
+"the Ultimate Cheat!\n"
+"\n"
+"(Press 'Y' to quit)"
 msgstr ""
 
-#: m_menu.c:8215
+#: m_menu.c:2193
 msgid ""
 "Why don't you go back and try\n"
 "jumping on that house to\n"
-"see what happens?"
+"see what happens?\n"
+"\n"
+"(Press 'Y' to quit)"
 msgstr ""
 
-#: m_menu.c:8216
+#: m_menu.c:2194
 msgid ""
 "Every time you press 'Y', an\n"
-"SRB2 Developer cries..."
+"SRB2 Developer cries...\n"
+"\n"
+"(Press 'Y' to quit)"
 msgstr ""
 
-#: m_menu.c:8217
+#: m_menu.c:2195
 msgid ""
 "You'll be back to play soon, though...\n"
-"......right?"
+"......right?\n"
+"\n"
+"(Press 'Y' to quit)"
 msgstr ""
 
-#: m_menu.c:8218
+#: m_menu.c:2196
 msgid ""
 "Aww, is Egg Rock Zone too\n"
-"difficult for you?"
+"difficult for you?\n"
+"\n"
+"(Press 'Y' to quit)"
 msgstr ""
 
 #: m_misc.c:398

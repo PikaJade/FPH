@@ -16,10 +16,6 @@
 ///
 ///        code shamelessly inspired by the QuakeC sources, thanks Id :)
 
-#ifdef __EMSCRIPTEN__
-#include <emscripten.h>
-#endif
-
 #include "doomdef.h"
 #include "doomstat.h"
 #include "command.h"
@@ -281,11 +277,7 @@ void COM_BufExecute(void)
 
 /** Executes a string immediately.  Used for skirting around WAIT commands.
   */
-void
-#ifdef __EMSCRIPTEN__
-EMSCRIPTEN_KEEPALIVE
-#endif
-COM_ImmedExecute(const char *ptext)
+void COM_ImmedExecute(const char *ptext)
 {
 	size_t i = 0, j = 0;
 	char line[1024] = "";
@@ -2274,13 +2266,17 @@ void CV_AddValue(consvar_t *var, INT32 increment)
 					{
 						newvalue++;
 						if (newvalue == MAXSKINS)
-							newvalue = 0;
+							newvalue = 4;
+						else if (newvalue == 5)
+							newvalue = 6;
 					}
 					else if (increment < 0) // Going down!
 					{
 						newvalue--;
-						if (newvalue == -1)
+						if (newvalue <= 3)
 							newvalue = MAXSKINS-1;
+						else if (newvalue == 5)
+							newvalue = 4;
 					}
 				} while (var->PossibleValue[newvalue].strvalue == NULL);
 

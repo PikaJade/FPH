@@ -15,7 +15,7 @@
 #include "i_system.h"
 #include "am_map.h"
 #include "g_game.h"
-#include "m_random.h"
+#include "m_random.h" 
 #include "p_local.h"
 #include "s_sound.h"
 #include "r_main.h"
@@ -416,10 +416,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 				return;
 
 			fixed_t speed = special->info->mass; // gas jets use this for the vertical thrust
-			SINT8 flipval = P_MobjFlip(special); // virtually everything here centers around the thruster's gravity, not the object's!
-
-			if (special->state != &states[S_STEAM1]) // Only when it bursts
-				return;
+			SINT8 flipval = P_MobjFlip(special); // virtually everything here centers around the thruster's gravity, not the object's
 
 			toucher->eflags |= MFE_SPRUNG;
 			toucher->momz = flipval * FixedMul(speed, FixedSqrt(FixedMul(special->scale, toucher->scale))); // scale the speed with both objects' scales, just like with springs!
@@ -429,6 +426,21 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 				P_ResetPlayer(player);
 				if (player->panim != PA_FALL)
 					P_SetMobjState(toucher, S_PLAY_FALL);
+			}
+
+			// Play sounds (cannibalized from A_SetSolidSteam)
+			if (!(special->flags2 & MF2_AMBUSH))
+			{
+				if (P_RandomChance(FRACUNIT / 8))
+				{
+					if (special->info->deathsound)
+						S_StartSound(special, special->info->deathsound); // Hiss!
+				}
+				else
+				{
+					if (special->info->painsound)
+						S_StartSound(special, special->info->painsound);
+				}
 			}
 
 			return; // Don't collect it!
@@ -3876,9 +3888,9 @@ boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, INT32 da
 			P_RingDamage(player, inflictor, source, damage, damagetype, true);
 			damage = 0;
 		}
-		else if (player->rings > 0) // No shield but have rings.
+		else if (player->rings > 5) // No shield but have rings.
 		{
-			damage = player->rings;
+			damage = min(20,player->rings);
 			P_RingDamage(player, inflictor, source, damage, damagetype, false);
 			damage = 0;
 		}
@@ -4003,7 +4015,8 @@ void P_PlayerRingBurst(player_t *player, INT32 num_rings)
 		if (P_MobjWasRemoved(mo))
 			continue;
 
-		mo->fuse = 8*TICRATE;
+		mo->fuse = TICRATE;
+		mo->flags &= ~MF_SPECIAL;
 		P_SetTarget(&mo->target, player->mo);
 
 		P_SetScale(mo, player->mo->scale, true);
@@ -4042,7 +4055,7 @@ void P_PlayerRingBurst(player_t *player, INT32 num_rings)
 				momz = 3*FRACUNIT;
 			}
 
-			ns = FixedMul(FixedMul(momxy, FRACUNIT + FixedDiv(player->losstime<<FRACBITS, 10*TICRATE<<FRACBITS)), mo->scale);
+			ns = FixedMul(FixedMul(momxy, FRACUNIT + FixedDiv(player->losstime<<FRACBITS, 5*TICRATE<<FRACBITS)), mo->scale);
 			mo->momx = FixedMul(FINECOSINE(fa),ns);
 
 			if (!(twodlevel || (player->mo->flags2 & MF2_TWOD)))
