@@ -11062,6 +11062,7 @@ static void P_MinecartThink(player_t *player)
 
 	//Limit player's angle to a cone.
 #define MINECARTCONEMAX FixedAngle(20*FRACUNIT)
+/*
 	{
 		angle_t angdiff = player->mo->angle - minecart->angle;
 		if (angdiff < ANGLE_180 && angdiff > MINECARTCONEMAX)
@@ -11080,7 +11081,7 @@ static void P_MinecartThink(player_t *player)
 
 		}
 	}
-
+*/
 	// Player holding jump?
 	if (!(player->cmd.buttons & BT_JUMP))
 		player->pflags &= ~PF_JUMPDOWN;
@@ -11152,12 +11153,13 @@ static void P_MinecartThink(player_t *player)
 			else
 				minecart->angle = targetangle + ANGLE_180;
 			angdiff = (minecart->angle - prevangle);
-			if (angdiff && (!demoplayback || P_ControlStyle(player) == CS_LMAOGALOG))  // maintain relative angle on turns
+			
+/*			if (angdiff && (!demoplayback || P_ControlStyle(player) == CS_LMAOGALOG))  // maintain relative angle on turns
 			{
 				player->mo->angle += angdiff;
 				P_SetPlayerAngle(player, (angle_t)(player->angleturn << 16) + angdiff);
 			}
-
+*/
 			// Sideways detection
 			if (minecart->flags2 & MF2_AMBUSH)
 			{

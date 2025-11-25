@@ -1166,7 +1166,7 @@ void G_BuildTiccmd(ticcmd_t *cmd, INT32 realtics, UINT8 ssplayer)
 
 	strafeisturn = controlstyle == CS_SIMPLE && ticcmd_centerviewdown[forplayer] &&
 		((cv_cam_lockedinput[forplayer].value && !ticcmd_ztargetfocus[forplayer]) || (player->pflags & PF_STARTDASH)) &&
-		!player->climbing && player->powers[pw_carry] != CR_MINECART;
+		!player->climbing; //&& player->powers[pw_carry] != CR_MINECART;
 
 	// why build a ticcmd if we're paused?
 	// Or, for that matter, if we're being reborn.
@@ -1622,7 +1622,7 @@ void G_BuildTiccmd(ticcmd_t *cmd, INT32 realtics, UINT8 ssplayer)
 	else
 	{
 		// Adjust camera angle by player input
-		if (controlstyle == CS_SIMPLE && !forcestrafe && thiscam->chase && !turnheld[forplayer] && !ticcmd_centerviewdown[forplayer] && !player->climbing && player->powers[pw_carry] != CR_MINECART)
+		if (controlstyle == CS_SIMPLE && !forcestrafe && thiscam->chase && !turnheld[forplayer] && !ticcmd_centerviewdown[forplayer] && !player->climbing) //&& player->powers[pw_carry] != CR_MINECART)
 		{
 			fixed_t camadjustfactor = cv_cam_turnfacinginput[forplayer].value;
 
@@ -1649,7 +1649,7 @@ void G_BuildTiccmd(ticcmd_t *cmd, INT32 realtics, UINT8 ssplayer)
 
 		// Adjust camera angle to face player direction, depending on circumstances
 		// Nothing happens if cam left/right are held, so you can hold both to lock the camera in one direction
-		if (controlstyle == CS_SIMPLE && !forcestrafe && thiscam->chase && !turnheld[forplayer] && !ticcmd_centerviewdown[forplayer] && player->powers[pw_carry] != CR_MINECART)
+		if (controlstyle == CS_SIMPLE && !forcestrafe && thiscam->chase && !turnheld[forplayer] && !ticcmd_centerviewdown[forplayer])// && player->powers[pw_carry] != CR_MINECART)
 		{
 			fixed_t camadjustfactor;
 			boolean alt = false; // Reduce intensity on diagonals and prevent backwards movement from turning the camera
