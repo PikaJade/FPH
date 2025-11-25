@@ -5047,6 +5047,9 @@ void P_DoAbilityBounce(player_t *player, boolean changemomz)
 		player->pflags &= ~(PF_STARTJUMP|PF_JUMPED);
 		minmomz = FixedMul(player->mo->momz, 3*FRACUNIT/2);
 
+		// Squat down. Decrease viewheight for a moment after hitting the ground (hard),
+		player->deltaviewheight = -(P_MobjFlip(player->mo)*player->mo->momz); // make sure momz is negative
+
 		if (player->mo->eflags & MFE_VERTICALFLIP) // Use "min" or "max" depending on if the player is flipped
 			player->mo->momz = min(minmomz, (minmomz + prevmomz)/2);
 		else

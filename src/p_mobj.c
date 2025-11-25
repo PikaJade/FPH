@@ -3717,8 +3717,8 @@ static void P_PlayerMobjThinker(mobj_t *mobj)
 	// momentum movement
 	mobj->eflags &= ~MFE_JUSTSTEPPEDDOWN;
 
-	if (mobj->state-states == S_PLAY_BOUNCE_LANDING)
-		goto animonly; // no need for checkposition - doesn't move at ALL
+	// if (mobj->state-states == S_PLAY_BOUNCE_LANDING)
+	//	goto animonly; // no need for checkposition - doesn't move at ALL
 
 	// Zoom tube
 	if (mobj->tracer)
